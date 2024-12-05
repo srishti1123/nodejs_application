@@ -8,6 +8,13 @@ const logger = require("./utils/logger");
 // Configure environment variables
 dotenv.config();
 
+const GIT_COMMIT_SHA = process.env.DD_GIT_COMMIT_SHA || 'unknown_commit_sha';
+const GIT_REPOSITORY_URL = process.env.DD_GIT_REPOSITORY_URL || 'unknown_repository_url';
+
+tracer.setTags({
+  'git.commit.sha': GIT_COMMIT_SHA,
+  'git.repository_url': GIT_REPOSITORY_URL
+});
 const app = express();
 const PORT = process.env.PORT || 8080;
 
