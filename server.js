@@ -51,7 +51,7 @@ app.post("/api/user", (req, res) => {
 
 app.get("/api/error", (req, res) => {
   // Simulate an error to trigger the error handler
-  throw new Error("Something went wrong in /api/error!");
+  throw new Error("Something went wrong in  nodejs application /api/error!");
 });
 
 // Error handling middleware (catch unhandled errors)
@@ -64,3 +64,4 @@ app.use((err, req, res, next) => {
 app.listen(PORT, () => {
   logger.info(`Server started on port ${PORT}`);
 });
+
