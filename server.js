@@ -1,5 +1,10 @@
 // Import and initialize the Datadog tracer at the very beginning
-const tracer = require('dd-trace').init();
+const tracer = require('dd-trace').init({
+  tags: {
+    'git.commit.sha': process.env.DD_GIT_COMMIT_SHA || 'unknown-sha',
+    'git.repository.url': process.env.DD_GIT_REPOSITORY_URL || 'unknown-url'
+  }
+});
 const express = require("express");
 const cors = require("cors");
 const dotenv = require("dotenv");
@@ -36,8 +41,8 @@ app.post("/api/user", (req, res) => {
 
   if (username && email) {
     users.push({ username, email });
-    logger.info('User added successfully', { username });
-    logger.info('user email added successfully', { email });
+    logger.info('User added successfully', { username});
+    logger.info('user email added successfully',{email})
     res.json({ message: "User added successfully" });
   } else {
     res.status(400).json({ message: "Username and email are required" });
@@ -53,13 +58,6 @@ app.get("/api/error", (req, res) => {
 app.use((err, req, res, next) => {
   logger.error('Unhandled error occurred', { error: err.message, stack: err.stack });
   res.status(500).send('Something went wrong!');
-});
-
-// Add git information as tags
-tracer.addTags({
-  'git.commit.sha': process.env.DD_GIT_COMMIT_SHA,
-  'git.repository_url': process.env.DD_GIT_REPOSITORY_URL,
-  'version': process.env.DD_VERSION
 });
 
 // Start the server and log the event
