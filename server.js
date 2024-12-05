@@ -51,7 +51,7 @@ app.post("/api/user", (req, res) => {
 
 app.get("/api/error", (req, res) => {
   // Simulate an error to trigger the error handler
-  throw new Error("Something went wrong in  nodejs application /api/error!");
+  throw new Error("Something went wrong in  nodejs /api/error!");
 });
 
 // Error handling middleware (catch unhandled errors)
@@ -60,6 +60,16 @@ app.use((err, req, res, next) => {
   res.status(500).send('Something went wrong!');
 });
 
+app.get("/api/exception", (req, res) => {
+  // Simulate an error to trigger the error handler
+  throw new Error("Something went wrong in  nodejs application /api/error!");
+});
+
+// Error handling middleware (catch unhandled errors)
+app.use((err, req, res, next) => {
+  logger.error('Unhandled error occurred', { error: err.message, stack: err.stack });
+  res.status(500).send('errorr');
+});
 // Start the server and log the event
 app.listen(PORT, () => {
   logger.info(`Server started on port ${PORT}`);
