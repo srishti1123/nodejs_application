@@ -74,4 +74,3 @@ app.use((err, req, res, next) => {
 app.listen(PORT, () => {
   logger.info(`Server started on port ${PORT}`);
 });
-
