@@ -8,13 +8,6 @@ const logger = require("./utils/logger");
 // Configure environment variables
 dotenv.config();
 
-const GIT_COMMIT_SHA = process.env.DD_GIT_COMMIT_SHA || 'unknown_commit_sha';
-const GIT_REPOSITORY_URL = process.env.DD_GIT_REPOSITORY_URL || 'unknown_repository_url';
-
-tracer.setTags({
-  'git.commit.sha': GIT_COMMIT_SHA,
-  'git.repository_url': GIT_REPOSITORY_URL
-});
 const app = express();
 const PORT = process.env.PORT || 8080;
 
@@ -43,8 +36,8 @@ app.post("/api/user", (req, res) => {
 
   if (username && email) {
     users.push({ username, email });
-    logger.info('User added successfully', { username});
-    logger.info('user email added successfully',{email})
+    logger.info('User added successfully', { username });
+    logger.info('user email added successfully', { email });
     res.json({ message: "User added successfully" });
   } else {
     res.status(400).json({ message: "Username and email are required" });
@@ -60,6 +53,13 @@ app.get("/api/error", (req, res) => {
 app.use((err, req, res, next) => {
   logger.error('Unhandled error occurred', { error: err.message, stack: err.stack });
   res.status(500).send('Something went wrong!');
+});
+
+// Add git information as tags
+tracer.addTags({
+  'git.commit.sha': process.env.DD_GIT_COMMIT_SHA,
+  'git.repository_url': process.env.DD_GIT_REPOSITORY_URL,
+  'version': process.env.DD_VERSION
 });
 
 // Start the server and log the event
